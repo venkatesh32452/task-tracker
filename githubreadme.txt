@@ -1,0 +1,21 @@
+# Task Tracker
+
+A beginner-friendly, fully responsive Task Tracker built with vanilla HTML, CSS, and JavaScript.
+
+## Features
+
+- **Add new tasks**: Easily add items to your to-do list.
+- **Mark tasks as completed**: Toggle tasks between pending and completed states.
+- **Delete tasks**: Remove tasks you no longer need.
+- **Task Statistics**: View the total number of tasks and how many are completed.
+- **Data Persistence**: Uses Local Storage to save your tasks so they remain even after you refresh or close the browser.
+- **Responsive Design**: Works perfectly on both mobile and desktop devices.
+- **Clean UI**: Modern and simple interface using FontAwesome icons and Poppins font.
+
+## Technologies Used
+
+- **HTML5**: For the structure of the application.
+- **CSS3**: For styling, layout (Flexbox), and responsiveness.
+- **JavaScript (ES6)**: For the logic, DOM manipulation, and Local Storage integration (No frameworks like React or libraries like jQuery).
+
+## Project Structure

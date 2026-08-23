@@ -1,0 +1,111 @@
+// Select DOM elements
+const taskForm = document.getElementById('task-form');
+const taskInput = document.getElementById('task-input');
+const taskList = document.getElementById('task-list');
+const totalTasksElem = document.getElementById('total-tasks');
+const completedTasksElem = document.getElementById('completed-tasks');
+
+// Array to store tasks
+let tasks = [];
+
+// Initialize the app
+function init() {
+    // Check if tasks exist in Local Storage
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+        tasks = JSON.parse(storedTasks);
+    }
+    
+    renderTasks();
+}
+
+// Event listener for form submission
+taskForm.addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent page reload
+    
+    const taskText = taskInput.value.trim();
+    
+    if (taskText !== '') {
+        // Create new task object
+        const newTask = {
+            id: Date.now().toString(), // Unique ID based on timestamp
+            text: taskText,
+            completed: false
+        };
+        
+        tasks.push(newTask);
+        
+        // Save to local storage and render
+        saveTasks();
+        renderTasks();
+        
+        // Clear input field
+        taskInput.value = '';
+    }
+});
+
+// Function to render tasks to the DOM
+function renderTasks() {
+    // Clear current list
+    taskList.innerHTML = '';
+    
+    let completedCount = 0;
+    
+    // Loop through tasks and create HTML elements
+    tasks.forEach(task => {
+        if (task.completed) {
+            completedCount++;
+        }
+        
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        
+        li.innerHTML = `
+            <span class="task-text" onclick="toggleTask('${task.id}')">${task.text}</span>
+            <div class="actions">
+                <button class="btn complete-btn" onclick="toggleTask('${task.id}')" title="${task.completed ? 'Mark as pending' : 'Mark as completed'}">
+                    <i class="fas ${task.completed ? 'fa-undo' : 'fa-check'}"></i>
+                </button>
+                <button class="btn delete-btn" onclick="deleteTask('${task.id}')" title="Delete task">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        
+        taskList.appendChild(li);
+    });
+    
+    // Update statistics
+    totalTasksElem.textContent = tasks.length;
+    completedTasksElem.textContent = completedCount;
+}
+
+// Function to toggle task completion status
+// Attached to the window object so it can be called from inline HTML onclick handlers
+window.toggleTask = function(id) {
+    tasks = tasks.map(task => {
+        if (task.id === id) {
+            return { ...task, completed: !task.completed };
+        }
+        return task;
+    });
+    
+    saveTasks();
+    renderTasks();
+};
+
+// Function to delete a task
+window.deleteTask = function(id) {
+    tasks = tasks.filter(task => task.id !== id);
+    
+    saveTasks();
+    renderTasks();
+};
+
+// Function to save tasks to Local Storage
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Run init when page loads
+init();
